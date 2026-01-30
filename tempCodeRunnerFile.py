@@ -1,0 +1,3 @@
+'savana.jpg'
+    
+    # i.alphaMask(
