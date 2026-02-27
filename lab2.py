@@ -2,13 +2,12 @@ import cv2
 import matplotlib.pyplot as plt
 
 class imgProcessing:
-    
-    # read image
+    # Convert image to a cv2 readable image
     def readcv(self, fileName):
         cv2Img = cv2.imread(fileName, -1)
         return cv2Img
     
-    # Convert image to RGB
+    # Load image in RGB
     def img2Rgb(self, fileName):
         cv2Img = self.readcv(fileName)
         imgRgb = cv2.cvtColor(cv2Img, cv2.COLOR_BGR2RGB)
