@@ -1,3 +1,2 @@
-'savana.jpg'
-    
-    # i.alphaMask(
+
+        bgRGB = bgImg[:, :, :]
