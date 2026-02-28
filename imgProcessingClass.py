@@ -1,7 +1,10 @@
 import cv2
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-class imgProcessing:
+class imgProcessing():
+    
     # Convert image to a cv2 readable image
     def readcv(self, fileName):
         cv2Img = cv2.imread(fileName, -1)
@@ -25,7 +28,7 @@ class imgProcessing:
         print("Applying alpha mask to", fileName, "...")
         cv2Img = self.readcv(fileName)
         
-        print("Image Dimension ={}".format(cv2Img.shape))
+        # print("Image Dimension ={}".format(cv2Img.shape))
         imgBGR = cv2Img[:, :, 0:3]
         imgMask = cv2Img[:, :, 3]
         
@@ -41,11 +44,11 @@ class imgProcessing:
         newImg = cv2.resize(img, (newWidth, newHeight))
         return newImg
     
-    # Add image values to create a proper background
+    # Properly overlay foreground image on to background using an alpha mask
     def applyMask(self, fgImg, bgImg, mask):
         
         # # Extract the RGB channels from original image
-        # fgRGB = fgImg[:, :, 0]
+        # fgFloat = fgImg[:, :, 0]
         # G_orig = origImg[:, :, 1]
         # B_orig = origImg[:, :, 2]
         
@@ -58,39 +61,21 @@ class imgProcessing:
         # newImg = (R_orig + alpha) + (G_orig + alpha) + (B_orig + alpha)
         
         # Extract RGB values from images to apply mask
-        fgRGB = fgImg[:, :, :]
-        bgRGB = bgImg[:, :, :]
+        # fgFloat = fgImg[:, :, :]
+        # bgFloat = bgImg[:, :, :]
+        # alpha = mask[:, :]
+        # fgImg = cv2.imread("panther.jpg")
+        # bgImg = cv2.imread("savana.jpg")
+        
+        fgFloat = fgImg.astype(float)
+        bgFloat = bgImg.astype(float)
         alpha = mask.astype(float)/255
         
         # Apply masking formula to over lay foreground on background
-        newImg = alpha * fgRGB + (1 - alpha) * bgRGB
+        # newImg = alpha * fgFloat + (1 - alpha) * bgFloat
+        fgVal = cv2.multiply(alpha, fgFloat)
+        bgVal = cv2.multiply((1 - alpha), bgFloat)
+        newImg = cv2.add(fgVal, bgVal)
+        cv2.imshow("outImg", newImg/255)
         
         return newImg
-        
-class main:
-    i = imgProcessing()
-    
-    # Task 1 - Load image
-    bgName = 'savana.jpg'
-    bgImg = i.img2Rgb(bgName)
-    i.showImg(bgName, bgImg)
-    
-    # Task 2 - Extract alpha mask
-    pName = 'panther.png'
-    pImg = i.img2Rgb(pName)
-    pMask = i.getAlphaMask(pName)
-    plt.show()
-    
-    # Task 3 - Resize image    
-    # image.shape = [height, width, channels]
-    bgImg_fitted = i.myResize(bgImg, pImg.shape[1], pImg.shape[0])
-    i.showImg(bgName, bgImg_fitted)
-    
-    # Task 4 - Put panther on background image
-    # Logic for adding the values of the mask to the values of the background image and relayering the panther on the foreground
-    maskedBg = i.applyMask(pImg, bgImg_fitted, pMask)
-    i.showImg('Panther x Savana', maskedBg)
-    
-
-if __name__ == "__main__":
-    main()

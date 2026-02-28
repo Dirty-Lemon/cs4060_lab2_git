@@ -1,2 +1,2 @@
 
-        bgRGB = bgImg[:, :, :]
+    
